@@ -1,4 +1,5 @@
-﻿using EventUtils;
+﻿using System.Text.Json;
+using EventUtils;
 using Imports.Events;
 using Microsoft.AspNetCore.Mvc;
 using TestApps.DDD.DomainEvents.WebAPI.Requests;
@@ -24,6 +25,7 @@ namespace TestApps.DDD.DomainEvents.WebAPI.Controllers
             {
                 BolNumber = model.BolNumber,
                 Customer = model.Customer,
+                DetailsJson = JsonSerializer.Serialize(model),
             };
 
             await _eventHub.Publish(domainEvent);

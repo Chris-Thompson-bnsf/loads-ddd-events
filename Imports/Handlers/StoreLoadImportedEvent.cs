@@ -24,8 +24,8 @@ internal class StoreLoadImportedEvent : IDomainEventHandler<LoadImportedEvent>
         var efModel = new SavedLoadImportedEvent
         {
             BolNumber = domainEvent.BolNumber,
-            CustomerCode= domainEvent.Customer,
-            DetailsJson = string.Empty,
+            CustomerCode = domainEvent.Customer,
+            DetailsJson = domainEvent.DetailsJson,
         };
 
         using var scope = _scopeFactory.CreateScope();
