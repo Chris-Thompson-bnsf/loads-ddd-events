@@ -19,7 +19,7 @@ namespace TestApps.DDD.DomainEvents.WebAPI.Controllers
 
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> Import(ImportLoadRequest model)
+        public IActionResult Import(ImportLoadRequest model)
         {
             var domainEvent = new LoadImportedEvent()
             {
@@ -28,7 +28,7 @@ namespace TestApps.DDD.DomainEvents.WebAPI.Controllers
                 DetailsJson = JsonSerializer.Serialize(model),
             };
 
-            await _eventHub.Publish(domainEvent);
+            _eventHub.Publish(domainEvent);
 
             return Ok();
         }

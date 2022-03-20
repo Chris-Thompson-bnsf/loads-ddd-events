@@ -1,7 +1,7 @@
 ﻿using Imports.Data;
 using SharedKernel.EfCore;
 
-namespace WebAPI.HostedServices;
+namespace TestApps.DDD.DomainEvents.WebAPI.HostedServices;
 
 public class MigrateDbContextsHostedService : IHostedService
 {

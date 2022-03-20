@@ -34,7 +34,7 @@ internal class StoreLoadImportedEvent : IDomainEventHandler<LoadImportedEvent>
         await context.LoadImportedEvents.AddAsync(efModel, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        await _eventHub.Publish(new CreateLoadEvent()
+        _eventHub.Publish(new CreateLoadEvent()
         {
             BolNumber = domainEvent.BolNumber,
             Customer = domainEvent.Customer,

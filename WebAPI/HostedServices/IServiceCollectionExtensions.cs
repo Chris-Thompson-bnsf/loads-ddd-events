@@ -1,5 +1,5 @@
 ﻿using SharedKernel.EfCore;
-using WebAPI.HostedServices;
+using TestApps.DDD.DomainEvents.WebAPI.HostedServices;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -10,6 +10,8 @@ public static class IServiceCollectionExtensions
         this IServiceCollection services)
     {
         return services.AddSingleton<MigrateContextService>()
-           .AddHostedService<MigrateDbContextsHostedService>();
+           .AddHostedService<MigrateDbContextsHostedService>()
+           .AddHostedService<BackgroundEventHandler>()
+            ;
     }
 }
