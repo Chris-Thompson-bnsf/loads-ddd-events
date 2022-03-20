@@ -7,7 +7,7 @@ namespace EventUtils;
 internal class EventHub : IEventHub
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ConcurrentQueue<(IDomainEvent, Func<Task>)> _events = new();
+    private readonly ConcurrentQueue<IDomainEvent> _events = new ConcurrentQueue<IDomainEvent>();
 
     public EventHub(IServiceProvider serviceProvider)
     {
@@ -17,12 +17,7 @@ internal class EventHub : IEventHub
     public void Publish <T>(T domainEvent)
         where T: IDomainEvent
     {
-        _events.Enqueue((domainEvent, () =>
-                {
-                    var handlers = _serviceProvider.GetServices<IDomainEventHandler<T>>();
-                    return Task.WhenAll(handlers.Select(x => x.HandleAsync(domainEvent, CancellationToken.None)));
-                }
-            ));
+        _events.Enqueue(domainEvent);
     }
 
     public async Task HandleEventsAsync(CancellationToken cancellationToken)
