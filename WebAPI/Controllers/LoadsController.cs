@@ -1,4 +1,5 @@
-﻿using Imports.Data;
+﻿using EventUtils;
+using Imports.Events;
 using Microsoft.AspNetCore.Mvc;
 using TestApps.DDD.DomainEvents.WebAPI.Requests;
 
@@ -8,32 +9,24 @@ namespace TestApps.DDD.DomainEvents.WebAPI.Controllers
     [Route("loads")]
     public class LoadsController : Controller
     {
-        private readonly ImportsDbContext _context;
+        private readonly IEventHub _eventHub;
 
-        public LoadsController(ImportsDbContext context)
+        public LoadsController(IEventHub eventHub)
         {
-            _context = context;
+            _eventHub = eventHub;
         }
 
-        public async Task<IActionResult> Import(ImportLoadRequest model, CancellationToken cancellationToken)
+        [HttpPost]
+        [Route("")]
+        public async Task<IActionResult> Import(ImportLoadRequest model)
         {
-            var efModel = new SavedLoadImportedEvent()
-            {
-                BolNumber = model.BolNumber,
-                CustomerCode = model.Customer,
-                DetailsJson = string.Empty,
-            };
-
-            await _context.LoadImportedEvents.AddAsync(efModel, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            var domainEvent = new Imports.Events.LoadImportedEvent()
+            var domainEvent = new LoadImportedEvent()
             {
                 BolNumber = model.BolNumber,
                 Customer = model.Customer,
             };
 
-            // TODO: Publish event
+            await _eventHub.Publish(domainEvent);
 
             return Ok();
         }

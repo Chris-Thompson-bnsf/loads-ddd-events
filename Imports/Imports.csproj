@@ -21,6 +21,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Imports.Events\Imports.Events.csproj" />
+		<ProjectReference Include="..\Loads.Events\Loads.Events.csproj" />
+		<ProjectReference Include="..\SharedKernel.EfCore\SharedKernel.EfCore.csproj" />
 	</ItemGroup>
 
 </Project>

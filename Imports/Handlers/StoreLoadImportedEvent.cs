@@ -1,16 +1,22 @@
 ﻿using EventUtils;
 using Imports.Data;
 using Imports.Events;
+using Loads.Events;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Imports.Handlers;
 
 internal class StoreLoadImportedEvent : IDomainEventHandler<LoadImportedEvent>
 {
-    private readonly ImportsDbContext _context;
+    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly IEventHub _eventHub;
 
-    public StoreLoadImportedEvent(ImportsDbContext context)
+    public StoreLoadImportedEvent(
+        IServiceScopeFactory scopeFactory,
+        IEventHub eventHub)
     {
-        _context = context;
+        _scopeFactory = scopeFactory;
+        _eventHub = eventHub;
     }
 
     public async Task HandleAsync(LoadImportedEvent domainEvent, CancellationToken cancellationToken)
@@ -22,9 +28,16 @@ internal class StoreLoadImportedEvent : IDomainEventHandler<LoadImportedEvent>
             DetailsJson = string.Empty,
         };
 
-        await _context.LoadImportedEvents.AddAsync(efModel, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ImportsDbContext>();
 
-        // TODO: Publish an event to create a load in the Loads BC
+        await context.LoadImportedEvents.AddAsync(efModel, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+
+        await _eventHub.Publish(new CreateLoadEvent()
+        {
+            BolNumber = domainEvent.BolNumber,
+            Customer = domainEvent.Customer,
+        });
     }
 }

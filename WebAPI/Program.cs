@@ -7,9 +7,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddEventHub();
-
-builder.Services.AddLoadImportServices(builder.Configuration);
+builder.Services.AddEventHub()
+   .AddLoadImportServices(builder.Configuration)
+   .AddDbContextMigrationServices();
 
 var app = builder.Build();
 
