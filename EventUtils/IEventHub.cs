@@ -2,5 +2,5 @@
 
 public interface IEventHub
 {
-    Task Publish <T>(T domainEvent) where T: IDomainEvent;
+    void Publish <T>(T domainEvent) where T: IDomainEvent;
 }
