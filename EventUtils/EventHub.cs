@@ -15,12 +15,7 @@ internal class EventHub : IEventHub
         internal Func<Task> HandleAsync { get; init; }
         internal long HandleAttempts { get; init; }
         
-        public EventToProcess(IDomainEvent domainEvent, Func<Task> handleAsync)
-            : this(domainEvent, handleAsync, 0)
-        {
-        }
-        
-        public EventToProcess(IDomainEvent domainEvent, Func<Task> handleAsync, long handleAttempts)
+        public EventToProcess(IDomainEvent domainEvent, Func<Task> handleAsync, long handleAttempts = 0)
         {
             DomainEvent = domainEvent;
             HandleAsync = handleAsync;
